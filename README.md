@@ -16,4 +16,4 @@ A Python console application to manage daily expenses.
 - Exception Handling
 
 ## Author
-Kinu
+Kripya
