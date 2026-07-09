@@ -41,7 +41,34 @@ def set_budget():
 
 
 def emergency_fund():
-    pass
+    #Ask user to create an emergency fund
+    
+        answer = input("Do you want to create an emergency fund? (Y/N): ").strip().lower()
+
+        if answer in ("yes","y"):
+            
+            print("You Choose YES")
+            try:
+                 set_limit=int(input("Enter the extending limit you want :"))
+                 print(f"Emergency fund set to:{set_limit}")
+                 return set_limit
+            except ValueError:
+                print("Enter a valid Amount:")
+                return None
+           
+
+        elif  answer in ("no","n"):
+            print("You Choose NO")
+            return 0
+
+        else:
+            print("Enter yes or no")
+
+            return None
+#Main Program
+budget, currency = set_budget
+if budget is not None:
+    emergency=emergency_fund(currency)
 
 
 def add_expense():
