@@ -1,46 +1,54 @@
+
+expenses=[]
+budget = None
+currency = None
+emergency = 0
+
+
+
 def set_budget():
-##choose currency:
+## Ask to choose currency:
     print("1.INR")
     print("2.USD")
     print("3.GBP")
     print("4.EUR")
-
-
-    choice = input("Enter your Currency:").strip().lower()
+    
+#enter currency
+    currency = input("Enter your Currency:").strip().lower()
    
-       
-    if choice == "inr"or choice=="1":
-       choice ="₹"
+ #conditional statements to choose currency model      
+    if currency == "inr"or currency=="1":
+       currency ="₹"
        print("You choose INR (Indian Rupee) ")
 
-    elif choice == "usd"or choice=="2" :
-       choice = "$"
+    elif currency == "usd"or currency=="2" :
+       currency = "$"
        print("You choose US Dollar")
-    elif choice == "gbp"or choice=="3":
-        choice = "£"
+    elif currency == "gbp"or currency=="3":
+        currency = "£"
         print("You choose British Pounds")
-    elif choice == "eur" or choice=="4":
-        choice = "€"
+    elif currency == "eur" or currency=="4":
+        currency = "€"
         print("You choose Euro")
     else:
-         print("Please enter currency from the choice")
-         return 
+         print("Please enter currency :")
+         return None,None
     
+    #Enter Budget
     try:
-        money = int(input("Enter your Amount:"))
-        print(f"Your budget is {choice} {money}")
-        return money , choice
+        money = float(input("Enter your Budget Amount:"))
+        print(f"Your Budget is {currency} {money}")
+        return money , currency
     except ValueError:
         print("Please enter a valid amount.")
+        return None,None
+
     
 
-
     
-    
+def emergency_fund(currency):
 
 
-
-def emergency_fund():
     #Ask user to create an emergency fund
     
         answer = input("Do you want to create an emergency fund? (Y/N): ").strip().lower()
@@ -49,8 +57,8 @@ def emergency_fund():
             
             print("You Choose YES")
             try:
-                 set_limit=int(input("Enter the extending limit you want :"))
-                 print(f"Emergency fund set to:{set_limit}")
+                 set_limit=float(input("Enter the extending limit you want :"))
+                 print(f"Emergency fund set to:{currency}{set_limit}")
                  return set_limit
             except ValueError:
                 print("Enter a valid Amount:")
@@ -65,18 +73,68 @@ def emergency_fund():
             print("Enter yes or no")
 
             return None
-#Main Program
-budget, currency = set_budget
-if budget is not None:
-    emergency=emergency_fund(currency)
+
+    
+
 
 
 def add_expense():
-    pass
+ 
+    while True:
+      
+      category =input("Enter the expense category:")
+      category=category.title()
+      
+
+      if not category:
+          print("Enter category:")
+          continue
+
+
+      try:
+       amount = float(input("Enter the expense amount you want to add :"))
+      except ValueError:
+          print("Error ! Enter a valid number")
+          continue
+      
+     
+      
+      description=input("Enter a description :")
+      description = description.strip()
+      if not description:
+          print("Enter description:")
+          continue
+    
+
+      if amount <= 0:
+        print("Amount must be greater than zero")
+        continue
+      
+      expense = {
+          "category": category,
+          "amount": amount,
+          "description": description,
+      }
+      expenses.append(expense)
+
+      print ("Expense added successfully ")
+      break
+          
+
+
+    
 
 
 def view_expenses():
-    pass
+    if not expenses:
+        print("NO Expense found")
+    else:
+        for expense in expenses:
+            print(f"Category        :{expense['category']}")
+            print(f"Amount          :{expense['amount']}")
+            print(f"Description     :{expense['description']}")
+            print("*" * 30)
+    
 
 
 def search_expenses():
@@ -104,7 +162,9 @@ def remaining_budget():
 
 
 def main():
-    while True:
+     global budget , currency, emergency 
+
+     while True:
         print("\n===== Expense Tracker Menu =====")
         print("1. Set Budget")
         print("2. Emergency Fund")
@@ -124,16 +184,26 @@ def main():
             choice = int(choice)
 
             if choice == 1:
-                set_budget()
+                budget , currency = set_budget()
 
             elif choice == 2:
-                emergency_fund()
+                if currency is None:
+                    print("Please set your budget first:")
+                else :
+                 emergency = emergency_fund(currency)
 
             elif choice == 3:
-                add_expense()
+                if budget is None:
+                    print("Please set your budget first:")
+                else :
+                 add_expense()
 
             elif choice == 4:
-                view_expenses()
+                if budget is None:
+                    print("Please set your budget first:")
+                    print("Add your Expenses first:")
+                else:
+                  view_expenses()
 
             elif choice == 5:
                 search_expenses()
@@ -163,5 +233,7 @@ def main():
         except ValueError:
             print("Invalid input. Please enter a valid number.")
 
+
+   
 
 main()
