@@ -1,10 +1,9 @@
+from datetime import datetime
 
 expenses=[]
 budget = None
 currency = None
 emergency = 0
-
-
 
 def set_budget():
 ## Ask to choose currency:
@@ -79,6 +78,8 @@ def emergency_fund(currency):
 
 
 def add_expense():
+
+    date = datetime.now().strftime("%Y-%m-%d")
  
     while True:
       
@@ -92,7 +93,7 @@ def add_expense():
 
 
       try:
-       amount = float(input("Enter the expense amount you want to add :"))
+       amount = float(input(f"Enter the expense amount you want to add :{currency}"))
       except ValueError:
           print("Error ! Enter a valid number")
           continue
@@ -100,7 +101,7 @@ def add_expense():
      
       
       description=input("Enter a description :")
-      description = description.strip()
+      description = description.strip().title()
       if not description:
           print("Enter description:")
           continue
@@ -114,11 +115,22 @@ def add_expense():
           "category": category,
           "amount": amount,
           "description": description,
+          "date" : date ,
       }
       expenses.append(expense)
 
       print ("Expense added successfully ")
       break
+
+def display_expense(expense):
+        print(f"Category    : {expense['category']}")
+        print(f"Amount      : {currency}{expense['amount']}")
+        print(f"Description : {expense['description']}")
+        print(f"Date        : {expense['date']}")
+        print("*" * 30)
+    
+
+    
           
 
 
@@ -126,27 +138,147 @@ def add_expense():
 
 
 def view_expenses():
+    
     if not expenses:
-        print("NO Expense found")
+        print("Invalid choice")
     else:
         for expense in expenses:
-            print(f"Category        :{expense['category']}")
-            print(f"Amount          :{expense['amount']}")
-            print(f"Description     :{expense['description']}")
-            print("*" * 30)
+            display_expense(expense)
     
 
 
 def search_expenses():
-    pass
+    while True:
+        print("\nSearch Expenses")
+        print("1. Search by Category")
+        print("2. Search by Date")
+        print("3. Search by Description")
+        print("4. Back")
+        
+    
+        select = input ("Enter your Choice : ").strip()
 
+        if select == "1" :
+          search = input("Enter category:").strip().title()
+          found = False
+          for expense in expenses:
+              if search == expense['category']:
+                  found = True
+                  display_expense(expense)
+                  
+          if not found:    
+           print("Invalid choice")
+           
+                
+              
+                  
+        elif select == "2":
+            search = input("Enter Date (YYYY-MM-DD) :").strip()
+            found = False
+
+            for expense in expenses:
+                if search == expense["date"]:
+                    found = True
+                    display_expense(expense)
+                    
+            if not found:
+               print("Invalid choice")
+               
+
+
+        elif select == "3":
+            search = input("Enter Description:").strip().title()
+            found = False
+            for expense in expenses:
+                if search == expense['description']:
+                    found = True
+                    display_expense(expense)
+                    
+            if not found:
+               print("Invalid choice")
+               
+
+        elif select == "4" :
+         break
+        else:
+          print("Invalid Choice! Please try again.")
 
 def delete_expense():
-    pass
+    if not expenses:
+        print("Invalid Choice")
+        return
+
+    for index, expense in enumerate(expenses, start=1):
+        print(f"\nExpense {index}")
+        display_expense(expense)
+
+    try:  
+        choice = int(input("Enter the expense number to delete: "))
+        index = choice - 1
+        if 1 <= choice <= len(expenses):
+            deleted = expenses.pop(index)
+            print("Expense deleted successfully")
+            display_expense(deleted)
+        else:
+            print("Invalid Number")
+    except ValueError:
+        print("Please Enter a Valid number.")
 
 
+    
 def update_expenses():
-    pass
+    if not expenses:
+        print("No expenses found.")
+        return
+    for index, expense in enumerate(expenses, start=1):
+        print(f"\nExpense {index}")
+        display_expense(expense)
+    
+    try:
+        number= int(input("\nEnter expense number to update:"))
+        index = number - 1
+        if 0<= index < len(expenses):
+            expense = expenses[index]
+
+            while True:
+                print("\nUpdate Expense")
+                print("1. Update Category")
+                print("2. Update Amount")
+                print("3. Update Description")
+                print("4. Back")
+
+                update_choice = input("Enter your choice:").strip().lower()
+
+                if update_choice in ("category","1"):
+                   new_category=input("Enter your New Category:").strip().title()
+                   expense["category"]= new_category
+                   print("Category updated successfully.")
+                elif update_choice in ("amount","2"):
+                    new_amount =float(input(f"Enter your new Amount:({currency})"))
+                    if new_amount > 0:
+                      expense["amount"] = new_amount
+                    else:
+                      print("Amount must be greater than zero.")
+                    expense["amount"] = new_amount
+                    print(f"Amount updated successfully to {currency}{new_amount}")
+
+
+                elif update_choice in ("description","3"):
+                    new_description = input("Enter your new description:").strip().title()
+                    expense["description"] = new_description
+                    print("Description updated successfully.")
+                elif update_choice in ("back","4"):
+                    break
+                else:
+                    print("No Expense found")
+            print("\nUpdated Expense:")
+            display_expense(expense)
+
+        else:
+            print("Invalid expense number.")
+
+    except ValueError:
+        print("Please enter a valid number.")
 
 
 def total_amount():
