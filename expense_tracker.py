@@ -93,7 +93,7 @@ def add_expense():
 
 
       try:
-       amount = float(input(f"Enter the expense amount you want to add :{currency}"))
+       amount = float(input(f"Enter expense amount :{currency}"))
       except ValueError:
           print("Error ! Enter a valid number")
           continue
@@ -140,7 +140,7 @@ def display_expense(expense):
 def view_expenses():
     
     if not expenses:
-        print("Invalid choice")
+        print("No expenses found.")
     else:
         for expense in expenses:
             display_expense(expense)
@@ -167,7 +167,7 @@ def search_expenses():
                   display_expense(expense)
                   
           if not found:    
-           print("Invalid choice")
+           print("No expenses found.")
            
                 
               
@@ -182,7 +182,7 @@ def search_expenses():
                     display_expense(expense)
                     
             if not found:
-               print("Invalid choice")
+               print("No expenses found.")
                
 
 
@@ -195,7 +195,7 @@ def search_expenses():
                     display_expense(expense)
                     
             if not found:
-               print("Invalid choice")
+               print("No expense found")
                
 
         elif select == "4" :
@@ -205,7 +205,7 @@ def search_expenses():
 
 def delete_expense():
     if not expenses:
-        print("Invalid Choice")
+        print("No expense found")
         return
 
     for index, expense in enumerate(expenses, start=1):
@@ -257,11 +257,12 @@ def update_expenses():
                     new_amount =float(input(f"Enter your new Amount:({currency})"))
                     if new_amount > 0:
                       expense["amount"] = new_amount
+                      print(f"Amount updated successfully to {currency}{new_amount}")
+
                     else:
                       print("Amount must be greater than zero.")
-                    expense["amount"] = new_amount
-                    print(f"Amount updated successfully to {currency}{new_amount}")
-
+                    
+                    
 
                 elif update_choice in ("description","3"):
                     new_description = input("Enter your new description:").strip().title()
@@ -270,7 +271,7 @@ def update_expenses():
                 elif update_choice in ("back","4"):
                     break
                 else:
-                    print("No Expense found")
+                    print("Invalid choice.")
             print("\nUpdated Expense:")
             display_expense(expense)
 
