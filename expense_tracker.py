@@ -292,7 +292,7 @@ def total_expense():
     for expense in expenses:
         total += expense["amount"]
 
-        print(f"Total expense: {currency} {total}")
+    print(f"Total expense: {currency} {total}")
     
 
 
