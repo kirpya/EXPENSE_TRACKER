@@ -93,7 +93,7 @@ def add_expense():
 
 
       try:
-       amount = float(input(f"Enter expense amount :{currency}"))
+       amount = float(input(f"Enter the expense amount you want to add :{currency}"))
       except ValueError:
           print("Error ! Enter a valid number")
           continue
@@ -140,7 +140,7 @@ def display_expense(expense):
 def view_expenses():
     
     if not expenses:
-        print("No expenses found.")
+        print("Invalid choice")
     else:
         for expense in expenses:
             display_expense(expense)
@@ -167,7 +167,7 @@ def search_expenses():
                   display_expense(expense)
                   
           if not found:    
-           print("No expenses found.")
+           print("Invalid choice")
            
                 
               
@@ -182,7 +182,7 @@ def search_expenses():
                     display_expense(expense)
                     
             if not found:
-               print("No expenses found.")
+               print("Invalid choice")
                
 
 
@@ -195,7 +195,7 @@ def search_expenses():
                     display_expense(expense)
                     
             if not found:
-               print("No expense found")
+               print("Invalid choice")
                
 
         elif select == "4" :
@@ -205,7 +205,7 @@ def search_expenses():
 
 def delete_expense():
     if not expenses:
-        print("No expense found")
+        print("Invalid Choice")
         return
 
     for index, expense in enumerate(expenses, start=1):
@@ -257,12 +257,11 @@ def update_expenses():
                     new_amount =float(input(f"Enter your new Amount:({currency})"))
                     if new_amount > 0:
                       expense["amount"] = new_amount
-                      print(f"Amount updated successfully to {currency}{new_amount}")
-
                     else:
                       print("Amount must be greater than zero.")
-                    
-                    
+                    expense["amount"] = new_amount
+                    print(f"Amount updated successfully to {currency}{new_amount}")
+
 
                 elif update_choice in ("description","3"):
                     new_description = input("Enter your new description:").strip().title()
@@ -271,7 +270,7 @@ def update_expenses():
                 elif update_choice in ("back","4"):
                     break
                 else:
-                    print("Invalid choice.")
+                    print("No Expense found")
             print("\nUpdated Expense:")
             display_expense(expense)
 
@@ -282,16 +281,51 @@ def update_expenses():
         print("Please enter a valid number.")
 
 
-def total_amount():
-    pass
+def total_expense():
+    if not expenses:
+       print("No expenses found.")
+       return
+    
+    total = 0
+    
 
+    for expense in expenses:
+        total += expense["amount"]
 
-def total_savings():
-    pass
+        print(f"Total expense: {currency} {total}")
+    
+
 
 
 def remaining_budget():
-    pass
+    if budget is None:
+        print("set your budget first")
+    
+    total=0
+    for expense in expenses:
+        total += expense["amount"]
+    
+    remaining=budget - total
+    print(f"Remaining Budget : {currency}{remaining}")
+    if remaining<0:
+        print("Warning ! you have exceed your budget")
+
+def summary():
+    if budget is None:
+        print("Please set your budget first.")
+        return
+
+    total = 0
+    for expense in expenses:
+        total += expense["amount"]
+
+    remaining = budget - total
+
+    print("\n===== Expense Summary =====")
+    print(f"Budget            : {currency}{budget}")
+    print(f"Total Expenses    : {currency}{total}")
+    print(f"Emergency Fund    : {currency}{emergency}")
+    print(f"Remaining Budget  : {currency}{remaining}")
 
 
 def main():
@@ -306,9 +340,9 @@ def main():
         print("5. Search Expenses")
         print("6. Delete Expense")
         print("7. Update Expense")
-        print("8. Total Amount")
-        print("9. Total Savings")
-        print("10. Remaining Budget")
+        print("8. Total Expense")
+        print("9. Remaining Budget")
+        print("10.Summary")
         print("11. Exit")
 
         choice = input("Enter your choice (1-11): ")
@@ -348,13 +382,13 @@ def main():
                 update_expenses()
 
             elif choice == 8:
-                total_amount()
+                total_expense()
 
             elif choice == 9:
-                total_savings()
+                remaining_budget()
 
             elif choice == 10:
-                remaining_budget()
+                summary()
 
             elif choice == 11:
                 print("Exiting the program. Goodbye!")
